@@ -1,12 +1,15 @@
 package lucas.school.service;
 
+import static br.com.lucas.mapper.ObjectMapper.parseListObjects;
+import static br.com.lucas.mapper.ObjectMapper.parseObject;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lucas.school.data.dto.AlunoDTO;
 import lucas.school.models.Aluno;
 import lucas.school.models.Turma;
 import lucas.school.repository.AlunoRepository;
@@ -18,24 +21,30 @@ public class AlunoService {
 	AlunoRepository repository;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public List<Aluno> findAll() {
-		return repository.findAll();
+	// FIND ALL
+	public List<AlunoDTO> findAll() {
+        return parseListObjects(repository.findAll(), AlunoDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public Optional<Aluno> findById(Long id) {
-		return repository.findById(id);
+	// FIND BY ID
+	public AlunoDTO findById(Long id) {
+		var entity = repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Aluno com ID " + id + " não encontrado"));
+		return parseObject(entity, AlunoDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// create a person
-	public Aluno create(Aluno aluno) {
-		return repository.save(aluno);
+	// CREATE
+	
+	public AlunoDTO create(AlunoDTO aluno) {
+		var entity = parseObject(aluno, Aluno.class);
+		return parseObject(repository.save(entity), AlunoDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public Aluno update(Aluno aluno) {
+	public AlunoDTO update(AlunoDTO aluno) {
 	    Aluno existing = repository.findById(aluno.getId())
 	        .orElseThrow(() -> new EntityNotFoundException("Aluno não encontrado"));
 	    existing.setNome(aluno.getNome());
@@ -48,7 +57,7 @@ public class AlunoService {
 	    novaTurma.setId(aluno.getTurma().getId());
 	    existing.setTurma(novaTurma);
 	    
-	    return repository.save(existing);
+	    return parseObject(repository.save(existing), AlunoDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------

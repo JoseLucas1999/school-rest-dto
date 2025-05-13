@@ -1,4 +1,6 @@
 spring:
+  flyway:
+    enabled: false
   application:
     name: school
   datasource:
@@ -17,3 +19,4 @@ spring:
 logging:
   level:
       root: INFO
+

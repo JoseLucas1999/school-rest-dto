@@ -1,15 +1,17 @@
 package lucas.school.service;
 
+import static br.com.lucas.mapper.ObjectMapper.parseListObjects;
+import static br.com.lucas.mapper.ObjectMapper.parseObject;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lucas.school.data.dto.ProfessorDTO;
 import lucas.school.models.Disciplina;
 import lucas.school.models.Professor;
-import lucas.school.models.Turma;
 import lucas.school.repository.ProfessorRepository;
 
 @Service
@@ -19,24 +21,27 @@ public class ProfessorService {
 	ProfessorRepository repository;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public List<Professor> findAll() {
-		return repository.findAll();
+	public List<ProfessorDTO> findAll() {
+		return parseListObjects(repository.findAll(), ProfessorDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public Optional<Professor> findById(Long id) {
-		return repository.findById(id);
+	public ProfessorDTO findById(Long id) {
+		var entity = repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Aluno com ID " + id + " não encontrado"));
+		return parseObject(entity, ProfessorDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	// create a person
-	public Professor create(Professor professor) {
-		return repository.save(professor);
+	// CREATE
+	public ProfessorDTO create(ProfessorDTO professor) {
+		var entity = parseObject(professor, Professor.class);
+		return parseObject(repository.save(entity), ProfessorDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public Professor update(Professor professor) {
+	public ProfessorDTO update(ProfessorDTO professor) {
 	    Professor existing = repository.findById(professor.getId())
 	        .orElseThrow(() -> new EntityNotFoundException("Professor não encontrado"));
 	    existing.setNome(professor.getNome());
@@ -50,7 +55,7 @@ public class ProfessorService {
 	    novaDisciplina.setId(professor.getDisciplina().getId());
 	    existing.setDisciplina(novaDisciplina);
 	    
-	    return repository.save(existing);
+	    return parseObject(repository.save(existing), ProfessorDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------

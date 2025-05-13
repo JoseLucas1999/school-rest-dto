@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lucas.school.models.Disciplina;
+import lucas.school.data.dto.DisciplinaDTO;
 import lucas.school.service.DisciplinaService;
 
 @RestController
@@ -27,7 +27,7 @@ public class DisciplinaController {
 //    FIND ALL 
     
     @GetMapping
-    public List<Disciplina> findAll() {
+    public List<DisciplinaDTO> findAll() {
         return service.findAll();
     }
 
@@ -35,24 +35,22 @@ public class DisciplinaController {
 //    FIND BY ID
     
     @GetMapping("/{id}")
-    public ResponseEntity<Disciplina> findById(@PathVariable Long id) {
-        return service.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public DisciplinaDTO findById(@PathVariable Long id) {
+        return service.findById(id);
     }
 
 //--------------------------------------------------------------------
 //    CREATE
     
     @PostMapping
-    public Disciplina create(@RequestBody Disciplina disciplina) {
+    public DisciplinaDTO create(@RequestBody DisciplinaDTO disciplina) {
         return service.create(disciplina);
     }
 
 //--------------------------------------------------------------------
 //    UPDATE
     @PutMapping
-    public Disciplina update(@RequestBody Disciplina disciplina) {
+    public DisciplinaDTO update(@RequestBody DisciplinaDTO disciplina) {
 		return service.update(disciplina);
     }
 

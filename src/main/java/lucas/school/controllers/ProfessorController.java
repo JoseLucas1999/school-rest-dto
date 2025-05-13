@@ -1,7 +1,6 @@
 package lucas.school.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lucas.school.models.Professor;
-import lucas.school.repository.ProfessorRepository;
+import lucas.school.data.dto.ProfessorDTO;
 import lucas.school.service.ProfessorService;
 
 @RestController
@@ -27,34 +25,29 @@ public class ProfessorController {
 
 //--------------------------------------------------------------------
 //    FIND ALL 
-    
     @GetMapping
-    public List<Professor> findAll() {
+    public List<ProfessorDTO> findAll() {
         return service.findAll();
     }
 
 //--------------------------------------------------------------------    
 //    FIND BY ID
-    
     @GetMapping("/{id}")
-    public ResponseEntity<Professor> findById(@PathVariable Long id) {
-        return service.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public ProfessorDTO findById(@PathVariable Long id) {
+        return service.findById(id);
     }
 
 //--------------------------------------------------------------------
 //    CREATE
-    
     @PostMapping
-    public Professor create(@RequestBody Professor professor) {
+    public ProfessorDTO create(@RequestBody ProfessorDTO professor) {
         return service.create(professor);
     }
 
 //--------------------------------------------------------------------
 //    UPDATE
     @PutMapping
-    public Professor update(@RequestBody Professor professor) {
+    public ProfessorDTO update(@RequestBody ProfessorDTO professor) {
 		return service.update(professor);
     }
 

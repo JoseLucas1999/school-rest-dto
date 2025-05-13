@@ -1,12 +1,15 @@
 package lucas.school.service;
 
+import static br.com.lucas.mapper.ObjectMapper.parseListObjects;
+import static br.com.lucas.mapper.ObjectMapper.parseObject;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lucas.school.data.dto.DisciplinaDTO;
 import lucas.school.models.Disciplina;
 import lucas.school.repository.DisciplinaRepository;
 
@@ -17,37 +20,41 @@ public class DisciplinaService {
 	DisciplinaRepository repository;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public List<Disciplina> findAll() {
-		return repository.findAll();
+	public List<DisciplinaDTO> findAll() {
+		return parseListObjects(repository.findAll(), DisciplinaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public Optional<Disciplina> findById(Long id) {
-		return repository.findById(id);
+	public DisciplinaDTO findById(Long id) {
+		var entity = repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Aluno com ID " + id + " não encontrado"));
+		return parseObject(entity, DisciplinaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// create a person
-	public Disciplina create(Disciplina disciplina) {
-		return repository.save(disciplina);
+	public DisciplinaDTO create(DisciplinaDTO disciplina) {
+		var entity = parseObject(disciplina, Disciplina.class);
+		return parseObject(repository.save(entity), DisciplinaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public Disciplina update(Disciplina disciplina) {
+	public DisciplinaDTO update(DisciplinaDTO disciplina) {
 	    Disciplina existing = repository.findById(disciplina.getId())
-	        .orElseThrow(() -> new EntityNotFoundException("Disciplina não encontrado"));
+	        .orElseThrow(() -> new EntityNotFoundException("DisciplinaDTO não encontrado"));
 	    existing.setNome(disciplina.getNome());
 	    existing.setCargaHoraria(disciplina.getCargaHoraria());
 	    existing.setDescricao(disciplina.getDescricao());
-	    return repository.save(existing);
+	    
+	    return parseObject(repository.save(existing), DisciplinaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void delete(Long id) {
 		Disciplina entity = repository.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException("Disciplina com ID " + id + " não encontrado."));
+				.orElseThrow(() -> new EntityNotFoundException("DisciplinaDTO com ID " + id + " não encontrado."));
 		repository.delete(entity);
 	}
 

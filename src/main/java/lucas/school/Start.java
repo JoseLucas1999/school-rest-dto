@@ -11,3 +11,7 @@ public class Start {
 	}
 
 }
+
+// flyway
+// hateos
+// swagger
