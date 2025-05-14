@@ -8,6 +8,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import lucas.school.models.Turma;
 
+
+
 @JacksonXmlRootElement(localName = "Aluno")
 public class AlunoDTO extends RepresentationModel<AlunoDTO> implements Serializable{
 

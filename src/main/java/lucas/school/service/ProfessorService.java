@@ -1,7 +1,7 @@
 package lucas.school.service;
 
-import static br.com.lucas.mapper.ObjectMapper.parseListObjects;
-import static br.com.lucas.mapper.ObjectMapper.parseObject;
+import static lucas.school.mapper.ObjectMapper.parseListObjects;
+import static lucas.school.mapper.ObjectMapper.parseObject;
 
 import java.util.List;
 
