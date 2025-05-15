@@ -1,5 +1,10 @@
 package lucas.school.service;
 
+import static lucas.school.mapper.ObjectMapper.parseListObjects;
+import static lucas.school.mapper.ObjectMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lucas.school.controllers.ProfessorController;
+import lucas.school.controllers.TurmaController;
+import lucas.school.data.dto.DisciplinaDTO;
+import lucas.school.data.dto.TurmaDTO;
+import lucas.school.models.Disciplina;
 import lucas.school.models.Turma;
 import lucas.school.repository.TurmaRepository;
 
@@ -17,29 +27,32 @@ public class TurmaService {
 	TurmaRepository repository;
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public List<Turma> findAll() {
-		return repository.findAll();
+	public List<TurmaDTO> findAll() {
+		return parseListObjects(repository.findAll(), TurmaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
-	public Optional<Turma> findById(Long id) {
-		return repository.findById(id);
+	public TurmaDTO findById(Long id) {
+		var entity = repository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Aluno com ID " + id + " não encontrado"));
+		return parseObject(entity, TurmaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// create a person
-	public Turma create(Turma turma) {
-		return repository.save(turma);
+	public TurmaDTO create(TurmaDTO turma) {
+		var entity = parseObject(turma, Turma.class);
+		return parseObject(repository.save(entity), TurmaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public Turma update(Turma turma) {
+	public TurmaDTO update(TurmaDTO turma) {
 	    Turma existing = repository.findById(turma.getId())
 	        .orElseThrow(() -> new EntityNotFoundException("Turma não encontrado"));
 	    existing.setNome(turma.getNome());
 	    existing.setAnoLetivo(turma.getAnoLetivo());
-	    return repository.save(existing);
+	    return parseObject(repository.save(existing), TurmaDTO.class);
 	}
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
