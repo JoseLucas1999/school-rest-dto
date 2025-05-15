@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lucas.school.models.Turma;
+import lucas.school.data.dto.TurmaDTO;
 import lucas.school.service.TurmaService;
 
 @RestController
@@ -27,7 +27,7 @@ public class TurmaController {
 //    FIND ALL 
     
     @GetMapping
-    public List<Turma> findAll() {
+    public List<TurmaDTO> findAll() {
         return service.findAll();
     }
 
@@ -35,24 +35,23 @@ public class TurmaController {
 //    FIND BY ID
     
     @GetMapping("/{id}")
-    public ResponseEntity<Turma> findById(@PathVariable Long id) {
-        return service.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    public TurmaDTO findById(@PathVariable Long id) {
+        return service.findById(id);
+
     }
 
 //--------------------------------------------------------------------
 //    CREATE
     
     @PostMapping
-    public Turma create(@RequestBody Turma turma) {
+    public TurmaDTO create(@RequestBody TurmaDTO turma) {
         return service.create(turma);
     }
 
 //--------------------------------------------------------------------
 //    UPDATE
     @PutMapping
-    public Turma update(@RequestBody Turma turma) {
+    public TurmaDTO update(@RequestBody TurmaDTO turma) {
 		return service.update(turma);
     }
 
